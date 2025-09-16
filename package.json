@@ -1,0 +1,40 @@
+{
+  "name": "react-router-shadcn-starter",
+  "private": true,
+  "author": {
+    "email": "me@tronin.dev",
+    "name": "Tronin Denis"
+  },
+  "repository": {
+    "url": "https://github.com/ts-ign0re/react-router-shadcn-starter"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "pnpm exec biome format --write",
+    "check-types": "turbo run check-types",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "biome": "^0.3.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2",
+    "turbo": "^2.5.6",
+    "typescript": "5.9.2"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "pnpm exec biome lint --write",
+      "pnpm exec biome format --write"
+    ],
+    "*.{md,mdx,mjs,yml,yaml,css}": [
+      "pnpm exec biome format --write"
+    ]
+  }
+}
