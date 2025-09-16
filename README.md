@@ -1,4 +1,6 @@
-# Starter Kit
+[![CI](https://github.com/ts-ign0re/react-router-shadcn-starter/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/ts-ign0re/react-router-shadcn-starter/actions/workflows/ci.yml)
+
+# React Router + Shadcn Starter Kit with SSR
 
 A modern full-stack starter kit built with React Router, TurboRepo, and TypeScript.
 
@@ -107,7 +109,7 @@ pnpm add <dependency-name>
 - **Build Tool**: TurboRepo
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **UI Components**: Shadcn & Radix UI
+- **UI Components**: Shadcn Radix UI
 - **Linting/Formatting**: Biome
 - **Package Manager**: pnpm
 
