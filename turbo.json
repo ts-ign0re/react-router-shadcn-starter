@@ -8,14 +8,23 @@
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {
+      "cache": true,
       "dependsOn": ["^lint"]
     },
+    "format": {
+      "cache": true,
+      "dependsOn": ["^check-types"]
+    },
     "check-types": {
+      "cache": true,
       "dependsOn": ["^check-types"]
     },
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "test": {
+      "cache": true
     }
   }
 }

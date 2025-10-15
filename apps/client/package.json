@@ -7,8 +7,8 @@
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "check-types": "react-router typegen && pnpm exec biome check --write",
-    "lint": "pnpm exec biome lint --write",
-    "format": "pnpm exec biome format --write"
+    "lint": "pnpm exec biome lint --write ./app",
+    "format": "pnpm exec biome format --write ./app"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
