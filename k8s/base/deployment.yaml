@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tenants-dashboard
+  labels:
+    app: tenants-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tenants-dashboard
+  template:
+    metadata:
+      labels:
+        app: tenants-dashboard
+    spec:
+      containers:
+      - name: tenants-dashboard
+        image: tenants-dashboard:latest
+        ports:
+        - containerPort: 5173
+          name: http
+        env:
+        # Infrastructure services (available in dev-infra namespace)
+        - name: DATABASE_URL
+          value: "postgresql://app:app@citus-coordinator.dev-infra.svc.cluster.local:5432/app"
+        - name: REDIS_URL
+          value: "redis://redis.dev-infra.svc.cluster.local:6379"
+        - name: KAFKA_BROKERS
+          value: "redpanda.dev-infra.svc.cluster.local:9092"
+        - name: SCHEMA_REGISTRY_URL
+          value: "http://schema-registry.dev-infra.svc.cluster.local:8081"
+        - name: LOKI_URL
+          value: "http://loki.dev-infra.svc.cluster.local:3100"
+        
+        # Application environment
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "5173"
+        
+        # Tenant configuration
+        - name: TENANT_ID_HEADER
+          value: "X-Tenant-Id"
+        - name: DEFAULT_TENANT_ID
+          value: "10001"
+        
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        
+        # Liveness probe - is the container alive?
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          timeoutSeconds: 3
+          failureThreshold: 3
+        
+        # Readiness probe - is the container ready to serve traffic?
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3

@@ -1,0 +1,8 @@
+# Files to exclude from Tilt hot-reload
+node_modules/
+.git/
+dist/
+coverage/
+*.test.js
+*.spec.js
+__tests__/

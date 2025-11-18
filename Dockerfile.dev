@@ -1,0 +1,48 @@
+# ============================================
+# Development Dockerfile with HMR for Turborepo + pnpm
+# Hot Module Replacement works inside Kubernetes cluster
+# ============================================
+
+FROM node:20-alpine
+
+# Enable corepack for pnpm
+RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
+
+# Install development tools
+RUN apk add --no-cache git curl
+
+# Create non-root user for development
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 -G nodejs
+
+WORKDIR /app
+
+# Copy workspace files first (for better caching)
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json turbo.json ./
+
+# Copy all workspace packages
+COPY apps ./apps
+COPY packages ./packages
+
+# Install ALL dependencies (including devDependencies) as root
+RUN pnpm install --frozen-lockfile
+
+# Change ownership to nodejs user after installation
+RUN chown -R nodejs:nodejs /app
+
+# Switch to nodejs user for runtime
+USER nodejs
+
+# Expose dev server port (React Router default: 5173) and HMR websocket port
+EXPOSE 5173
+EXPOSE 24678
+
+# Environment variables for development
+ENV NODE_ENV=development
+
+# Health check for dev server
+HEALTHCHECK --interval=30s --timeout=3s --start-period=30s --retries=3 \
+  CMD wget -qO- http://localhost:5173/ || exit 1
+
+# Start Turbo dev server with HMR
+CMD ["pnpm", "run", "dev", "--", "--host", "0.0.0.0"]
