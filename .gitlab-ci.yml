@@ -51,8 +51,18 @@ check-types:
 
 test:
   stage: test
+  image: mcr.microsoft.com/playwright:v1.57.0-noble
   needs:
     - install
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@9.0.0 --activate
+    - pnpm config set store-dir .pnpm-store
+    - pnpm install --frozen-lockfile
   script:
     - pnpm test
-  allow_failure: true
+  artifacts:
+    when: always
+    paths:
+      - apps/client/playwright-report/
+    expire_in: 1 week
